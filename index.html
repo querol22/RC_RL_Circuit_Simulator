@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC/RL Circuit Simulator</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>RC / RL Circuit Simulator</h1>
+        <p class="subtitle">
+            Interactive charging & discharging curves
+        </p>
+
+        <!-- ===================== -->
+        <!-- TOP GRID (2 COLUMNS) -->
+        <!-- ===================== -->
+        <div class="top-grid">
+
+            <!-- LEFT COLUMN -->
+            <div class="left-column">
+                <!-- ===================== -->
+                <!-- 1. CIRCUIT TYPE TOGGLE -->
+                <!-- ===================== -->
+                <div class="section">
+                    <h3>1. Circuit Type</h3>
+                    <div class="toggle-group">
+                        <button id="rcButton" class="active">RC Circuit</button>
+                        <button id="rlButton">RL Circuit</button>
+                    </div>
+                </div>
+                
+                <!-- ===================== -->
+                <!-- 2. INPUT CONTROLS -->
+                <!-- ===================== -->
+                <div class="section">
+                    <h3>2. Parameters</h3>
+
+                    <div class="control">
+                        <label for="resistanceSlider">
+                            Resistance (Ω): <span id="resistanceValue">1000</span>
+                        </label>
+                        <input type="range" id="resistanceSlider" min="100" max="1000000" step="100" value="1000">
+                    </div>
+
+                    <div class="control" id="capacitanceControl">
+                        <label for="capacitanceSlider">
+                            Capacitance (F): <span id="capacitanceValue">0.001</span>
+                        </label>
+                        <input type="range" id="capacitanceSlider" min="1e-6" max="0.01" step="1e-6" value="0.001">
+                    </div>
+
+                    <div class="control hidden" id="inductanceControl">
+                        <label for="inductanceSlider">
+                            Inductance (H): <span id="inductanceValue">0.01</span>
+                        </label>
+                        <input type="range" id="inductanceSlider" min="0.001" max="1" step="0.001" value="0.01">
+                    </div>
+
+                    <div class="control">
+                        <label for="voltageSlider">
+                            Input Voltage (V): <span id="voltageValue">5</span>
+                        </label>
+                        <input type="range" id="voltageSlider" min="0" max="10" step="0.1" value="5">
+                    </div>
+
+                    <div class="control">
+                        <label>Mode:</label>
+                        <div class="toggle-group">
+                            <button id="chargeButton" class="active">Charging</button>
+                            <button id="dischargeButton">Discharging</button>
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <label>Filter Type:</label>
+                        <div class="toggle-group">
+                            <button id="lowPassButton" class="active">Low-pass</button>
+                            <button id="highPassButton">High-pass</button>
+                            <button id="bandPassButton">Band-pass</button>
+                            <button id="notchButton">Notch</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="right-column">
+
+                <!-- ===================== -->
+                <!-- INFO PANEL -->
+                <!-- ===================== -->
+                <div class="section">
+                    <h3>3. Info</h3>
+                    <p id="timeConstantDisplay">Time constant τ: --</p>
+                    <p class="formula">
+                        RC: V(t) = V₀ (1 - e<sup>-t/RC</sup>)  
+                        <br>
+                        RL: V(t) = V₀ (1 - e<sup>-tR/L</sup>)
+                    </p>
+                </div>
+
+                <!-- ===================== -->
+                <!-- Circuit Diagram -->
+                <!-- ===================== --> 
+                <div class="section">
+                    <h3>4. Circuit Diagram</h3>
+                    <div id="circuitContainer"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ============================== -->
+        <!-- BOTTOM GRAPH (Voltage vs Time) -->
+        <!-- ============================== -->
+        <div class="section">
+            <h3>5. Voltage vs Time</h3>
+            <canvas id="timeChart"></canvas>
+        </div>
+
+        <!-- =================================== -->
+        <!-- BOTTOM GRAPH (Voltage vs Frequency) -->
+        <!-- =================================== -->
+        <div class="section">
+            <h3>6. Voltage vs Frequency</h3>
+            <canvas id="frequencyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ===================== -->
+    <!-- JS MODULES -->
+    <!-- ===================== -->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

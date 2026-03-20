@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="26.86685mm"
+   height="4.2034154mm"
+   viewBox="0 0 26.86685 4.2034154"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="idle_Inductance.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.80176768"
+     inkscape:cx="51.137008"
+     inkscape:cy="8.7307087"
+     inkscape:window-width="1200"
+     inkscape:window-height="1027"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-91.545833,-146.31459)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path4203"
+       style="fill:none;stroke:#000000;stroke-width:0.937683;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 117.94384,150.04916 h -3.70417 c -0.0111,-4.3389 -3.70973,-4.3389 -3.70416,0 -0.006,-4.33891 -3.71523,-4.32349 -3.70417,0 -7e-5,-4.35431 -3.71537,-4.35431 -3.70417,0 8e-5,-4.32348 -3.698596,-4.3389 -3.704163,0 -0.01114,-4.3389 -3.681248,-4.3389 -3.681248,0 h -3.727085"
+       sodipodi:nodetypes="cccccccc" />
+  </g>
+</svg>
