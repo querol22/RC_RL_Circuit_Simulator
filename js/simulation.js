@@ -35,6 +35,8 @@ export function generateTimeArray(tau, points = 150) {
 // ------------------------------
 export function calculateVoltage(type, mode, t, V0, R, C, L) {
     const tau = calculateTimeConstant(type, R, C, L);
+    // prevent tau = 0 → broken time array
+    if (tau === 0) tau = 1e-6;
 
     if (type === "RC") {
         if (mode === "charging") {
@@ -51,6 +53,10 @@ export function calculateVoltage(type, mode, t, V0, R, C, L) {
         } else {
             return V0 * Math.exp(-t / tau);
         }
+    }
+
+    if (type === "RLC") {
+        return 0; // keep simple for demo (no time-domain RLC)
     }
 
     return 0;
@@ -131,14 +137,27 @@ export function generateFrequencyResponse(type, filter, R, C, L) {
         }
 
         if (type === "RLC") {
-            // Simplified band-pass approximation
+
             const w0 = 1 / Math.sqrt(L * C);
             const Q = (1 / R) * Math.sqrt(L / C);
 
-            gain = (w / w0) / Math.sqrt(
-                Math.pow(1 - Math.pow(w / w0, 2), 2) +
-                Math.pow(w / (w0 * Q), 2)
-            );
+            if (filter === "bandpass") {
+
+                gain = (w / w0) / Math.sqrt(
+                    Math.pow(1 - Math.pow(w / w0, 2), 2) +
+                    Math.pow(w / (w0 * Q), 2)
+                );
+
+            } else if (filter === "notch") {
+
+                gain = Math.abs(1 - Math.pow(w / w0, 2)) / Math.sqrt(
+                    Math.pow(1 - Math.pow(w / w0, 2), 2) +
+                    Math.pow(w / (w0 * Q), 2)
+                );
+
+            } else {
+                gain = 0;
+            }
         }
 
         freqArray.push(f);

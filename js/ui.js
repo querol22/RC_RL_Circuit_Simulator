@@ -9,18 +9,14 @@ import { updateTimeChart, updateFrequencyChart } from "./chartConfig.js";
 // ------------------------------
 // DOM ELEMENTS
 // ------------------------------
-const resistanceSlider = document.getElementById("resistanceSlider");
-const capacitanceSlider = document.getElementById("capacitanceSlider");
-const inductanceSlider = document.getElementById("inductanceSlider");
-const voltageSlider = document.getElementById("voltageSlider");
-
-const resistanceValue = document.getElementById("resistanceValue");
-const capacitanceValue = document.getElementById("capacitanceValue");
-const inductanceValue = document.getElementById("inductanceValue");
-const voltageValue = document.getElementById("voltageValue");
+const resistanceInput = document.getElementById("resistanceInput");
+const capacitanceInput = document.getElementById("capacitanceInput");
+const inductanceInput = document.getElementById("inductanceInput");
+const voltageInput = document.getElementById("voltageInput");
 
 const rcButton = document.getElementById("rcButton");
 const rlButton = document.getElementById("rlButton");
+const rlcButton = document.getElementById("rlcButton");
 
 const chargeButton = document.getElementById("chargeButton");
 const dischargeButton = document.getElementById("dischargeButton");
@@ -39,7 +35,7 @@ const notchButton = document.getElementById("notchButton");
 // STATE
 // ------------------------------
 let state = {
-    type: "RC",           // RC or RL
+    type: "RC",           // RC or RL or RLC
     mode: "charging",     // charging or discharging
     filter: "lowpass",
     R: 1000,
@@ -67,18 +63,18 @@ function loadCircuitDiagram() {
 
     if (state.type === "RL") {
         if (state.filter === "lowpass") {
-            fileName = "RL_LowPassFilter.svg"; // change later to "RL_LowPassFilter.svg"
+            fileName = "RL_LowPassFilter.svg";
         } else if (state.filter === "highpass") {
-            fileName = "RL_HighPassFilter.svg"; // change later to "RL_LowPassFilter.svg"
+            fileName = "RL_HighPassFilter.svg";
         }
     }
 
     if (state.type === "RLC") {
         if (state.filter === "bandpass") {
-            fileName = "RLC_BandPassFilter.svg"; // change later to "RLC_BandPassFilter.svg"
+            fileName = "RLC_series_BandPassFilter.svg";
 
         } else if (state.filter === "notch") {
-            fileName = "RLC_NotchFilter.svg";   // change later to "RLC_NotchFilter.svg"
+            fileName = "RLC_series_NotchFilter.svg";
         }
     }
 
@@ -93,12 +89,12 @@ function loadCircuitDiagram() {
 // ------------------------------
 // UPDATE DISPLAY VALUES
 // ------------------------------
-function updateDisplayValues() {
-    resistanceValue.textContent = state.R;
-    capacitanceValue.textContent = state.C;
-    inductanceValue.textContent = state.L;
-    voltageValue.textContent = state.V0;
-}
+/*function updateDisplayValues() {
+    resistanceInput.textContent = state.R;
+    capacitanceInput.textContent = state.C;
+    inductanceInput.textContent = state.L;
+    voltageInput.textContent = state.V0;
+}*/
 
 // ------------------------------
 // UPDATE SIMULATION
@@ -112,37 +108,81 @@ function updateSimulation() {
     // Frequency domain (Bode magnitude)
     updateFrequencyChart(result.frequency, result.gain);
     
-    timeConstantDisplay.textContent =
-        `Time constant τ: ${result.tau.toExponential(3)} s`;
+    // Info
+    updateInfoPanel();
 }
 
 // ------------------------------
-// HANDLE SLIDERS
+// HANDLE Inputs R, C, L, Vin
 // ------------------------------
-function setupSliders() {
-    resistanceSlider.addEventListener("input", () => {
-        state.R = parseFloat(resistanceSlider.value);
-        updateDisplayValues();
+function setupInputs() {
+
+    resistanceInput.addEventListener("input", () => {
+        const val = parseFloat(resistanceInput.value);
+        if (!isNaN(val)) state.R = val;
         updateSimulation();
     });
 
-    capacitanceSlider.addEventListener("input", () => {
-        state.C = parseFloat(capacitanceSlider.value);
-        updateDisplayValues();
+    capacitanceInput.addEventListener("input", () => {
+        const val = parseFloat(capacitanceInput.value);
+        if (!isNaN(val)) state.C = val;
         updateSimulation();
     });
 
-    inductanceSlider.addEventListener("input", () => {
-        state.L = parseFloat(inductanceSlider.value);
-        updateDisplayValues();
+    inductanceInput.addEventListener("input", () => {
+        const val = parseFloat(inductanceInput.value);
+        if (!isNaN(val)) state.L = val;
         updateSimulation();
     });
 
-    voltageSlider.addEventListener("input", () => {
-        state.V0 = parseFloat(voltageSlider.value);
-        updateDisplayValues();
+    voltageInput.addEventListener("input", () => {
+        const val = parseFloat(voltageInput.value);
+        if (!isNaN(val)) state.V0 = val;
         updateSimulation();
     });
+}
+
+
+// ------------------------------
+// HANDLE Info Panel
+// ------------------------------
+function updateInfoPanel() {
+    const info = document.querySelector(".formula");
+
+    if (state.type === "RC") {
+        const tau = state.R * state.C;
+
+        timeConstantDisplay.textContent =
+            `τ = ${tau.toExponential(2)} s`;
+
+        info.innerHTML =
+            state.mode === "charging"
+            ? `V(t) = V₀ (1 - e<sup>-t/RC</sup>)`
+            : `V(t) = V₀ e<sup>-t/RC</sup>`;
+    }
+
+    else if (state.type === "RL") {
+        const tau = state.L / state.R;
+
+        timeConstantDisplay.textContent =
+            `τ = ${tau.toExponential(2)} s`;
+
+        info.innerHTML =
+            state.mode === "charging"
+            ? `V(t) = V₀ (1 - e<sup>-tR/L</sup>)`
+            : `V(t) = V₀ e<sup>-tR/L</sup>`;
+    }
+
+    else if (state.type === "RLC") {
+        const w0 = 1 / Math.sqrt(state.L * state.C);
+        const f0 = w0 / (2 * Math.PI);
+
+        timeConstantDisplay.textContent =
+            `f₀ = ${f0.toFixed(1)} Hz`;
+
+        info.innerHTML =
+            `Band-pass / Notch filter (RLC)`;
+    }
 }
 
 // ------------------------------
@@ -154,6 +194,7 @@ function setupCircuitToggle() {
 
         rcButton.classList.add("active");
         rlButton.classList.remove("active");
+        rlcButton.classList.remove("active");
 
         capacitanceControl.classList.remove("hidden");
         inductanceControl.classList.add("hidden");
@@ -166,9 +207,23 @@ function setupCircuitToggle() {
 
         rlButton.classList.add("active");
         rcButton.classList.remove("active");
+        rlcButton.classList.remove("active");
 
         inductanceControl.classList.remove("hidden");
         capacitanceControl.classList.add("hidden");
+
+        updateSimulation();
+    });
+
+    rlcButton.addEventListener("click", () => {
+        state.type = "RLC";
+
+        rlcButton.classList.add("active");
+        rlButton.classList.remove("active");
+        rcButton.classList.remove("active");
+
+        inductanceControl.classList.remove("hidden");
+        capacitanceControl.classList.remove("hidden");
 
         updateSimulation();
     });
@@ -250,12 +305,15 @@ function setupFilterToggle() {
 // INIT UI
 // ------------------------------
 export function initUI() {
-    setupSliders();
+    setupInputs();
     setupCircuitToggle();
     setupModeToggle();
     setupFilterToggle();
 
-    updateDisplayValues();
     updateSimulation();
     loadCircuitDiagram();
+    
+    // Some crushes--> Initialise RC circuit + LowPassFilter
+    rcButton.classList.add("active");
+    lowPassButton.classList.add("active");
 }

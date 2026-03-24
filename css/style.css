@@ -22,3 +22,39 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Change appearance Buttons */
+.toggle-group button {
+    padding: 9px 12px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.toggle-group button:hover {
+    background-color: #f0f0f0;
+}
+
+.toggle-group button.active {
+    background-color: #a8e6a3; /* soft green */
+    border-color: #4CAF50;
+}
+
+.chart-container {
+    width: 100%;        /* shrink width */
+    max-width: 800px;  /* prevent huge scaling */
+    margin: 12px auto; /* center */
+}
+
+canvas {
+    width: 100% !important;
+    height: 300px !important; /* fixed height */
+}
+
+.formula {
+    font-family: monospace;
+    background: #f7f7f7;
+    padding: 10px;
+    border-radius: 8px;
+}

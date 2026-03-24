@@ -53,11 +53,11 @@ export function initChart() {
 export function updateTimeChart(timeArray, voltageArray) {
     timeChart.data.labels = timeArray;
     timeChart.data.datasets[0].data = voltageArray;
-    timeChart.update();
+    timeChart.update("none");
 }
 
 export function updateFrequencyChart(freqArray, gainArray) {
     frequencyChart.data.labels = freqArray;
     frequencyChart.data.datasets[0].data = gainArray;
-    frequencyChart.update();
+    frequencyChart.update("none");
 }
